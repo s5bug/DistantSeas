@@ -37,8 +37,8 @@ object Config {
     final val hostProp = "ffishlogs.httpserver.host"
     final val portProp = "ffishlogs.httpserver.port"
     val config: ConfigValue[IO, HttpServer] = for {
-      host <- env("FFISHLOGS_HTTPSERVER_HOST").or(prop(hostProp)).as[Host].default(ipv4"0.0.0.0")
-      port <- env("FFISHLOGS_HTTPSERVER_PORT").or(prop(portProp)).as[Port].default(port"8080")
+      host <- prop(hostProp).or(env("FFISHLOGS_HTTPSERVER_HOST")).as[Host].default(ipv4"0.0.0.0")
+      port <- prop(portProp).or(env("FFISHLOGS_HTTPSERVER_PORT")).as[Port].default(port"8080")
     } yield HttpServer(host, port)
   }
 
@@ -55,7 +55,7 @@ object Config {
   object Sqlite {
     final val databaseProp = "ffishlogs.sqlite.database"
     val config: ConfigValue[IO, Sqlite] = for {
-      database <- env("FFISHLOGS_SQLITE_DATABASE").or(prop(databaseProp)).as[Path]
+      database <- prop(databaseProp).or(env("FFISHLOGS_SQLITE_DATABASE")).as[Path]
     } yield Sqlite(database)
   }
 
