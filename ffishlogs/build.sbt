@@ -29,6 +29,8 @@ lazy val core = project
       "org.typelevel" %% "cats-effect" % "3.5.3",
       "co.fs2" %% "fs2-core" % "3.9.4",
       "co.fs2" %% "fs2-io" % "3.9.4",
+      "is.cir" %% "ciris" % "3.5.0",
+      "is.cir" %% "ciris-http4s" % "3.5.0" intransitive(),
       "org.typelevel" %% "log4cats-core" % "2.6.0", 
       "org.typelevel" %% "log4cats-slf4j" % "2.6.0",
       "org.slf4j" % "slf4j-api" % "2.0.10",
