@@ -4,6 +4,7 @@ import cats.effect.{ExitCode, IO, IOApp}
 import cats.syntax.all.*
 import ciris.*
 import com.comcast.ip4s.{Host, Port, ipv4, port}
+import com.ffishlogs.api.V0
 import org.http4s.HttpRoutes
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.Router
@@ -13,15 +14,12 @@ import org.typelevel.log4cats.slf4j.Slf4jFactory
 object Main extends IOApp {
   
   override def run(args: List[String]): IO[ExitCode] = Config.config.load[IO].flatMap {
-    case c @ Config(httpServerConfig, sqliteConfig) =>
+    case c @ Config(discordConfig, httpServerConfig, sqliteConfig) =>
       implicit val loggerFactory: LoggerFactory[IO] = Slf4jFactory.create[IO]
       loggerFactory.create.flatMap { implicit logger: Logger[IO] =>
-        import org.http4s.dsl.io._
-        val service = HttpRoutes.of[IO] {
-          case GET -> Root => Ok("Hello, world!")
-        }
-
-        val app = Router("/" -> service).orNotFound
+        val app = Router(
+          "/api/v0" -> V0(logger).service
+        ).orNotFound
 
         val server = EmberServerBuilder
           .default[IO]
@@ -31,8 +29,8 @@ object Main extends IOApp {
           .build
 
         logger.info("Config:") >>
-        c.logInfo(logger) >>
-        server.useForever
+          c.logInfo(logger) >>
+          server.useForever
       }
   }
   
