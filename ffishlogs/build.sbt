@@ -13,8 +13,8 @@ ThisBuild / developers := List(
 val Scala331 = "3.3.1"
 ThisBuild / crossScalaVersions := Seq(Scala331)
 ThisBuild / scalaVersion := Scala331 // the default Scala
+ThisBuild / tlJdkRelease := Some(21)
 ThisBuild / scalacOptions ++= Seq(
-    "--release", "21",
     "-no-indent", "-old-syntax"
 )
 
