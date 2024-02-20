@@ -16,8 +16,10 @@ ThisBuild / scalaVersion := Scala331 // the default Scala
 ThisBuild / tlJdkRelease := Some(21)
 ThisBuild / scalacOptions ++= Seq(
   "-no-indent", "-old-syntax",
+  "-Wvalue-discard",
   "-Wnonunit-statement",
 )
+ThisBuild / libraryDependencies += compilerPlugin("com.github.ghik" % "zerowaste" % "0.2.16" cross CrossVersion.full)
 
 lazy val root = tlCrossRootProject.aggregate(core)
 
