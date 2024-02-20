@@ -36,7 +36,9 @@ lazy val core = project
       "org.slf4j" % "slf4j-api" % "2.0.10",
       "org.slf4j" % "slf4j-jdk14" % "2.0.10",
       "org.http4s" %% "http4s-ember-server" % "1.0.0-M40",
-      "org.http4s" %% "http4s-dsl" % "1.0.0-M40"
+      "org.http4s" %% "http4s-dsl" % "1.0.0-M40",
+      "org.xerial" % "sqlite-jdbc" % "3.45.1.0",
+      "com.armanbilge" %%% "porcupine" % "0.0.1",
     ),
     mainClass := Some("com.ffishlogs.Main"),
     nativeImageJvm := "graalvm-java21",
