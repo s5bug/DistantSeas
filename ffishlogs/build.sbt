@@ -15,7 +15,8 @@ ThisBuild / crossScalaVersions := Seq(Scala331)
 ThisBuild / scalaVersion := Scala331 // the default Scala
 ThisBuild / tlJdkRelease := Some(21)
 ThisBuild / scalacOptions ++= Seq(
-    "-no-indent", "-old-syntax"
+  "-no-indent", "-old-syntax",
+  "-Wnonunit-statement",
 )
 
 lazy val root = tlCrossRootProject.aggregate(core)
