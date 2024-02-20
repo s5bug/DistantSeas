@@ -4,7 +4,7 @@ import cats.Applicative
 import cats.syntax.all._
 import porcupine.{Query, sql}
 
-final case class Statements[F[_, _]](
+final case class StatementsOnce[F[_, _]](
   createUsersTable: F[Unit, Unit],
   createVoyagesTable: F[Unit, Unit],
   createVoyagesIndex: F[Unit, Unit],
@@ -12,22 +12,22 @@ final case class Statements[F[_, _]](
   createEventsIndex: F[Unit, Unit]
 ) {
   
-  def traverseK[M[_], G[_, _]](preparation: [A, B] => F[A, B] => M[G[A, B]])(using app: Applicative[M]): M[Statements[G]] =
-    (
-      preparation(createUsersTable),
-      preparation(createVoyagesTable),
-      preparation(createVoyagesIndex),
-      preparation(createEventsTable),
-      preparation(createEventsIndex)
-    ).mapN(Statements.apply)
+  def execute[M[_]](execution: F[Unit, Unit] => M[Unit])(using app: Applicative[M]): M[Unit] =
+    Vector(
+      createUsersTable,
+      createVoyagesTable,
+      createVoyagesIndex,
+      createEventsTable,
+      createEventsIndex
+    ).traverse_(execution)
   
 }
 
-object Statements {
+object StatementsOnce {
 
-  final val query: Statements[Query] = Statements(
+  final val query: StatementsOnce[Query] = StatementsOnce(
     createUsersTable =
-      sql"""CREATE TABLE users (
+      sql"""CREATE TABLE IF NOT EXISTS users (
            |  discordId INTEGER PRIMARY KEY,
            |  discordAccessToken TEXT NOT NULL,
            |  discordRefreshToken TEXT NOT NULL,
@@ -40,7 +40,7 @@ object Statements {
            |)
            |""".stripMargin.command,
     createVoyagesTable =
-      sql"""CREATE TABLE voyages (
+      sql"""CREATE TABLE IF NOT EXISTS voyages (
            |  voyageId INTEGER PRIMARY KEY AUTOINCREMENT,
            |  ownerId INTEGER NOT NULL,
            |  logVersion INTEGER NOT NULL,
@@ -49,9 +49,9 @@ object Statements {
            |)
            |""".stripMargin.command,
     createVoyagesIndex =
-      sql"""CREATE UNIQUE INDEX ownerToVoyages ON voyages (ownerId, voyageId)""".command,
+      sql"""CREATE UNIQUE INDEX IF NOT EXISTS ownerToVoyages ON voyages (ownerId, voyageId)""".command,
     createEventsTable =
-      sql"""CREATE TABLE events (
+      sql"""CREATE TABLE IF NOT EXISTS events (
            |  eventId INTEGER PRIMARY KEY AUTOINCREMENT,
            |  voyageId INTEGER NOT NULL,
            |  timestampInstant TEXT NOT NULL,
@@ -142,7 +142,7 @@ object Statements {
            |)
            |""".stripMargin.command,
     createEventsIndex =
-      sql"""CREATE UNIQUE INDEX voyagesToEvents ON events (voyageId, eventId)""".command
+      sql"""CREATE UNIQUE INDEX IF NOT EXISTS voyagesToEvents ON events (voyageId, eventId)""".command
   )
   
 }
