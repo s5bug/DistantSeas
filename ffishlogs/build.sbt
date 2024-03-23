@@ -10,9 +10,9 @@ ThisBuild / developers := List(
   tlGitHubDev("s5bug", "Aly")
 )
 
-val Scala331 = "3.3.1"
-ThisBuild / crossScalaVersions := Seq(Scala331)
-ThisBuild / scalaVersion := Scala331 // the default Scala
+val Scala340 = "3.4.0"
+ThisBuild / crossScalaVersions := Seq(Scala340)
+ThisBuild / scalaVersion := Scala340 // the default Scala
 ThisBuild / tlJdkRelease := Some(21)
 ThisBuild / scalacOptions ++= Seq(
   "-no-indent", "-old-syntax",
@@ -29,9 +29,9 @@ lazy val core = project
     name := "ffishlogs",
     libraryDependencies ++= Seq(
       "org.typelevel" %% "cats-core" % "2.10.0",
-      "org.typelevel" %% "cats-effect" % "3.5.3",
-      "co.fs2" %% "fs2-core" % "3.9.4",
-      "co.fs2" %% "fs2-io" % "3.9.4",
+      "org.typelevel" %% "cats-effect" % "3.5.4",
+      "co.fs2" %% "fs2-core" % "3.10.0",
+      "co.fs2" %% "fs2-io" % "3.10.0",
       "is.cir" %% "ciris" % "3.5.0",
       "is.cir" %% "ciris-http4s" % "3.5.0" intransitive(),
       "org.typelevel" %% "log4cats-core" % "2.6.0", 
@@ -40,8 +40,7 @@ lazy val core = project
       "org.slf4j" % "slf4j-jdk14" % "2.0.10",
       "org.http4s" %% "http4s-ember-server" % "1.0.0-M40",
       "org.http4s" %% "http4s-dsl" % "1.0.0-M40",
-      "org.xerial" % "sqlite-jdbc" % "3.45.1.0",
-      "com.armanbilge" %%% "porcupine" % "0.0.1",
+      "com.armanbilge" %% "porcupine" % "0.0.1",
     ),
     mainClass := Some("com.ffishlogs.Main"),
     nativeImageJvm := "graalvm-java21",
